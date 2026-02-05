@@ -1,14 +1,16 @@
+
 import { GoogleGenAI } from "@google/genai";
 
 export const getAIProductInsight = async (productName: string, category: string) => {
   try {
-    const apiKey = process.env.API_KEY;
+    // محاولة جلب المفتاح من البيئة أو من الكائن العالمي الذي عرفناه في index.tsx
+    const apiKey = (window as any).process?.env?.API_KEY || process.env.API_KEY;
+    
     if (!apiKey) {
       console.warn("API_KEY is missing. AI insights will be limited.");
       return "منتج مختبر طبياً يوفر نتائج فعالة وآمنة، مثالي لروتينك اليومي المتقدم.";
     }
 
-    // تهيئة العميل باستخدام المفتاح من بيئة التشغيل
     const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
