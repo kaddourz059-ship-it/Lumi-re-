@@ -7,14 +7,15 @@
     <title>Lumière Derme | L'excellence Dermatologique</title>
     <meta name="description" content="المتجر الرائد في الجزائر للعناية الطبية الفاخرة.">
     
-    <!-- تعريف متغيرات البيئة بشكل قطعي وشامل لضمان وصول المكتبات إليها -->
     <script>
-      (function() {
-        window.process = window.process || {};
-        window.process.env = window.process.env || {};
-        // مفتاح الـ API الخاص بك
-        window.process.env.API_KEY = "AIzaSyCrgCY0G0thuXQNIGX2qlC0gCi4U9xRl14";
-      })();
+      // تعريف متغيرات البيئة بشكل يمنع أي خطأ في الوصول إليها
+      window.process = {
+        env: {
+          API_KEY: "AIzaSyCrgCY0G0thuXQNIGX2qlC0gCi4U9xRl14"
+        }
+      };
+      // جعل process متاحاً كمتغير عالمي مباشر
+      var process = window.process;
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>

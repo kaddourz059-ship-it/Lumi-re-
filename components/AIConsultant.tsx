@@ -20,48 +20,28 @@ export const AIConsultant: React.FC = () => {
     if (!input.trim() || isTyping) return;
     
     const userMsg = input;
-    const apiKey = process.env.API_KEY;
-
-    if (!apiKey) {
-      setMessages(prev => [...prev, {role: 'user', text: userMsg}, {role: 'model', text: 'تنبيه: مفتاح الـ API غير متاح حالياً.'}]);
-      setInput('');
-      return;
-    }
-
     setInput('');
     setMessages(prev => [...prev, {role: 'user', text: userMsg}]);
     setIsTyping(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey });
+      // الالتزام الصارم بالوصول المباشر لـ process.env.API_KEY
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
-      // استخدام نموذج مستقر وهيكلية محتوى صريحة لتجنب أخطاء التحليل
-      const responseStream = await ai.models.generateContentStream({
-        model: 'gemini-flash-latest',
-        contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: userMsg,
         config: {
           systemInstruction: 'أنت خبير Dermatologist (طبيب جلدية) افتراضي لمتجر Lumière Derme الراقي في الجزائر. قدم نصائح علمية دقيقة، بأسلوب لبق وفاخر. لغتك هي العربية بلهجة مهذبة وراقية.'
         }
       });
       
-      let fullText = "";
-      setMessages(prev => [...prev, {role: 'model', text: ""}]);
-
-      for await (const chunk of responseStream) {
-        const chunkResponse = chunk as GenerateContentResponse;
-        const chunkText = chunkResponse.text;
-        if (chunkText) {
-          fullText += chunkText;
-          setMessages(prev => {
-            const newMessages = [...prev];
-            newMessages[newMessages.length - 1].text = fullText;
-            return newMessages;
-          });
-        }
-      }
+      const responseText = response.text || "نعتذر، لم أتمكن من معالجة طلبك حالياً.";
+      setMessages(prev => [...prev, {role: 'model', text: responseText}]);
+      
     } catch (error) {
-      console.error("Gemini Execution Error:", error);
-      setMessages(prev => [...prev, {role: 'model', text: 'عذراً، المستشار الذكي غير متاح حالياً. يرجى التأكد من اتصال الإنترنت أو المحاولة لاحقاً.'}]);
+      console.error("Gemini Error:", error);
+      setMessages(prev => [...prev, {role: 'model', text: 'عذراً، المستشار الطبي يواجه مشكلة تقنية بسيطة. يرجى المحاولة بعد لحظات.'}]);
     } finally {
       setIsTyping(false);
     }
@@ -70,14 +50,14 @@ export const AIConsultant: React.FC = () => {
   return (
     <div className="fixed bottom-6 right-6 z-[250]">
       {isOpen ? (
-        <div className="bg-white w-[380px] h-[600px] rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-slate-100 animate-in slide-in-from-bottom-10 fade-in duration-500">
+        <div className="bg-white w-[380px] h-[600px] rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-slate-100 animate-in slide-in-from-bottom-10 fade-in duration-500 text-right">
           <div className="bg-slate-950 p-7 text-white flex justify-between items-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
             <div className="flex items-center gap-4 relative z-10">
               <div className="bg-indigo-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-600/30">
                 <AppIcon name="Sparkles" size={18} />
               </div>
-              <div className="flex flex-col text-right">
+              <div className="flex flex-col">
                 <span className="font-black text-sm tracking-tight">AI Derme Expert</span>
                 <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-indigo-400">Consultation Live</span>
               </div>
@@ -90,12 +70,12 @@ export const AIConsultant: React.FC = () => {
           <div ref={scrollRef} className="flex-grow p-8 overflow-y-auto hide-scrollbar space-y-8 bg-slate-50/30">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-start' : 'justify-end'}`}>
-                <div className={`max-w-[85%] p-5 rounded-[2rem] text-[13px] leading-relaxed font-medium shadow-sm transition-all duration-300 text-right ${
+                <div className={`max-w-[85%] p-5 rounded-[2rem] text-[13px] leading-relaxed font-medium shadow-sm transition-all duration-300 ${
                   m.role === 'user' 
                     ? 'bg-slate-900 text-white rounded-tr-none' 
                     : 'bg-white text-slate-800 rounded-tl-none border border-slate-100'
                 }`}>
-                  {m.text || "..."}
+                  {m.text}
                 </div>
               </div>
             ))}
@@ -114,7 +94,7 @@ export const AIConsultant: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="اكتب استفسارك الطبي هنا..."
-              className="flex-grow bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none text-right"
+              className="flex-grow bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none"
             />
             <button 
               onClick={handleSend}
