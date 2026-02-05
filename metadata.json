@@ -1,0 +1,7 @@
+{
+  "name": "Lumière Derme - Professional Medical Store",
+  "description": "أرقى متجر طبي للعناية بالبشرة والشعر في الجزائر، حلول مبتكرة تحت إشراف خبراء.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
