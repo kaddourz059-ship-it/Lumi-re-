@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { AppIcon } from './Icons';
@@ -5,7 +6,7 @@ import { AppIcon } from './Icons';
 export const AIConsultant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>([
-    {role: 'model', text: 'مرحباً بك في Lumière Derme. أنا مستشارك الطبي الذكي، مدعوم بأحدث تقنيات الجمال. كيف يمكنني مساعدتك في تصميم روتين العناية المثالي اليوم؟'}
+    {role: 'model', text: 'مرحباً بك في Lumière Derme. أنا مستشارك الطبي الذكي. كيف يمكنني مساعدتك في تصميم روتين العناية المثالي اليوم؟'}
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -24,19 +25,14 @@ export const AIConsultant: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const apiKey = process.env.API_KEY;
-      if (!apiKey) {
-        setMessages(prev => [...prev, {role: 'model', text: 'عذراً، نظام الاستشارة في وضع الصيانة حالياً. يمكنك التواصل معنا عبر واتساب للحصول على مساعدة فورية.'}]);
-        setIsTyping(false);
-        return;
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
+      // الالتزام التام بطريقة استدعاء المفتاح
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      
       const responseStream = await ai.models.generateContentStream({
         model: 'gemini-3-flash-preview',
         contents: userMsg,
         config: {
-          systemInstruction: 'أنت خبير Dermatologist (طبيب جلدية) افتراضي لمتجر Lumière Derme الراقي. قدم نصائح علمية دقيقة، بأسلوب لبق وفاخر. وجه المستخدم نحو المنتجات المناسبة لنوع بشرته. لغتك هي العربية بلهجة مهذبة وراقية.'
+          systemInstruction: 'أنت خبير Dermatologist (طبيب جلدية) افتراضي لمتجر Lumière Derme الراقي في الجزائر. قدم نصائح علمية دقيقة، بأسلوب لبق وفاخر. لغتك هي العربية بلهجة مهذبة وراقية.'
         }
       });
       
@@ -44,7 +40,7 @@ export const AIConsultant: React.FC = () => {
       setMessages(prev => [...prev, {role: 'model', text: ""}]);
 
       for await (const chunk of responseStream) {
-        const chunkText = (chunk as GenerateContentResponse).text;
+        const chunkText = chunk.text;
         if (chunkText) {
           fullText += chunkText;
           setMessages(prev => {
@@ -55,8 +51,8 @@ export const AIConsultant: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Consultant Stream Error:", error);
-      setMessages(prev => [...prev, {role: 'model', text: 'نعتذر عن هذا الخلل الفني. فريق الخبراء لدينا متاح دائماً للإجابة على استفساراتك عبر الهاتف.'}]);
+      console.error("Gemini Error:", error);
+      setMessages(prev => [...prev, {role: 'model', text: 'نعتذر، المستشار الذكي يواجه ضغطاً حالياً. يمكنك تكرار سؤالك أو التواصل معنا مباشرة عبر واتساب.'}]);
     } finally {
       setIsTyping(false);
     }
@@ -72,7 +68,7 @@ export const AIConsultant: React.FC = () => {
               <div className="bg-indigo-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-600/30">
                 <AppIcon name="Sparkles" size={18} />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col text-right">
                 <span className="font-black text-sm tracking-tight">AI Derme Expert</span>
                 <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-indigo-400">Consultation Live</span>
               </div>
@@ -85,15 +81,22 @@ export const AIConsultant: React.FC = () => {
           <div ref={scrollRef} className="flex-grow p-8 overflow-y-auto hide-scrollbar space-y-8 bg-slate-50/30">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-start' : 'justify-end'}`}>
-                <div className={`max-w-[85%] p-5 rounded-[2rem] text-[13px] leading-relaxed font-medium shadow-sm transition-all duration-300 ${
+                <div className={`max-w-[85%] p-5 rounded-[2rem] text-[13px] leading-relaxed font-medium shadow-sm transition-all duration-300 text-right ${
                   m.role === 'user' 
                     ? 'bg-slate-900 text-white rounded-tr-none' 
                     : 'bg-white text-slate-800 rounded-tl-none border border-slate-100'
                 }`}>
-                  {m.text || (m.role === 'model' && <div className="flex gap-1 py-1"><div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce [animation-delay:0.2s]"></div><div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce [animation-delay:0.4s]"></div></div>)}
+                  {m.text || "..."}
                 </div>
               </div>
             ))}
+            {isTyping && (
+              <div className="flex justify-end">
+                <div className="bg-indigo-50 text-indigo-600 p-4 rounded-[2rem] rounded-tl-none text-[10px] font-black animate-pulse">
+                  المستشار الطبي يكتب...
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="p-6 bg-white border-t border-slate-50 flex gap-3">
@@ -102,13 +105,11 @@ export const AIConsultant: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="اكتب استفسارك الطبي هنا..."
-              disabled={isTyping}
-              className="flex-grow bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none transition-all placeholder:text-slate-300"
+              className="flex-grow bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none text-right"
             />
             <button 
               onClick={handleSend}
-              disabled={isTyping || !input.trim()}
-              className="bg-slate-950 text-white p-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200 disabled:opacity-20 active:scale-95"
+              className="bg-slate-950 text-white p-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-xl active:scale-95"
             >
               <AppIcon name="ArrowLeft" size={20} />
             </button>
@@ -119,9 +120,8 @@ export const AIConsultant: React.FC = () => {
           onClick={() => setIsOpen(true)}
           className="group bg-slate-950 text-white pl-8 pr-6 py-5 rounded-full shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-5 border-4 border-white"
         >
-          <span className="font-black text-xs uppercase tracking-[0.2em] hidden sm:block group-hover:text-indigo-400 transition-colors">استشارة فورية</span>
+          <span className="font-black text-xs uppercase tracking-[0.2em] hidden sm:block">استشارة فورية</span>
           <div className="relative">
-            <div className="absolute inset-0 bg-indigo-600 rounded-full animate-ping opacity-20"></div>
             <AppIcon name="MessageCircle" size={22} className="relative z-10 text-indigo-400" />
           </div>
         </button>

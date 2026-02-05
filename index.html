@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumière Derme | L'excellence Dermatologique</title>
     <meta name="description" content="المتجر الرائد في الجزائر للعناية الطبية الفاخرة.">
+    
+    <!-- تعريف متغيرات البيئة قبل كل شيء -->
+    <script>
+      window.process = {
+        env: {
+          API_KEY: "AIzaSyCrgCY0G0thuXQNIGX2qlC0gCi4U9xRl14"
+        }
+      };
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -24,12 +34,7 @@
             100% { transform: translateY(0); }
         }
         .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        .view-transition {
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            background: rgba(255, 255, 255, 0.7);backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);
         }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
@@ -49,7 +54,6 @@
 </head>
 <body class="overflow-x-hidden">
     <div id="root"></div>
-    <!-- إضافة ملف الدخول الرئيسي -->
     <script type="module" src="index.tsx"></script>
 </body>
 </html>
