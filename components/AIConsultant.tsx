@@ -6,7 +6,7 @@ import { AppIcon } from './Icons';
 export const AIConsultant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>([
-    {role: 'model', text: 'مرحباً بك في Lumière Derme. أنا مستشارك الطبي الذكي. كيف يمكنني مساعدتك في تصميم روتين العناية المثالي اليوم؟'}
+    {role: 'model', text: 'مرحباً بك في Lumière Derme. أنا مستشارك الطبي الذكي. كيف يمكنني مساعدتك اليوم؟'}
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -20,17 +20,25 @@ export const AIConsultant: React.FC = () => {
     if (!input.trim() || isTyping) return;
     
     const userMsg = input;
+    const apiKey = process.env.API_KEY;
+
+    if (!apiKey) {
+      setMessages(prev => [...prev, {role: 'user', text: userMsg}, {role: 'model', text: 'تنبيه: مفتاح الـ API غير متاح حالياً.'}]);
+      setInput('');
+      return;
+    }
+
     setInput('');
     setMessages(prev => [...prev, {role: 'user', text: userMsg}]);
     setIsTyping(true);
 
     try {
-      // الالتزام التام بطريقة استدعاء المفتاح
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       
+      // استخدام نموذج مستقر وهيكلية محتوى صريحة لتجنب أخطاء التحليل
       const responseStream = await ai.models.generateContentStream({
-        model: 'gemini-3-flash-preview',
-        contents: userMsg,
+        model: 'gemini-flash-latest',
+        contents: [{ role: 'user', parts: [{ text: userMsg }] }],
         config: {
           systemInstruction: 'أنت خبير Dermatologist (طبيب جلدية) افتراضي لمتجر Lumière Derme الراقي في الجزائر. قدم نصائح علمية دقيقة، بأسلوب لبق وفاخر. لغتك هي العربية بلهجة مهذبة وراقية.'
         }
@@ -40,7 +48,8 @@ export const AIConsultant: React.FC = () => {
       setMessages(prev => [...prev, {role: 'model', text: ""}]);
 
       for await (const chunk of responseStream) {
-        const chunkText = chunk.text;
+        const chunkResponse = chunk as GenerateContentResponse;
+        const chunkText = chunkResponse.text;
         if (chunkText) {
           fullText += chunkText;
           setMessages(prev => {
@@ -51,8 +60,8 @@ export const AIConsultant: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Gemini Error:", error);
-      setMessages(prev => [...prev, {role: 'model', text: 'نعتذر، المستشار الذكي يواجه ضغطاً حالياً. يمكنك تكرار سؤالك أو التواصل معنا مباشرة عبر واتساب.'}]);
+      console.error("Gemini Execution Error:", error);
+      setMessages(prev => [...prev, {role: 'model', text: 'عذراً، المستشار الذكي غير متاح حالياً. يرجى التأكد من اتصال الإنترنت أو المحاولة لاحقاً.'}]);
     } finally {
       setIsTyping(false);
     }
@@ -93,7 +102,7 @@ export const AIConsultant: React.FC = () => {
             {isTyping && (
               <div className="flex justify-end">
                 <div className="bg-indigo-50 text-indigo-600 p-4 rounded-[2rem] rounded-tl-none text-[10px] font-black animate-pulse">
-                  المستشار الطبي يكتب...
+                  جاري التحليل الطبي...
                 </div>
               </div>
             )}
@@ -109,7 +118,8 @@ export const AIConsultant: React.FC = () => {
             />
             <button 
               onClick={handleSend}
-              className="bg-slate-950 text-white p-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-xl active:scale-95"
+              disabled={isTyping}
+              className="bg-slate-950 text-white p-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-xl active:scale-95 disabled:opacity-50"
             >
               <AppIcon name="ArrowLeft" size={20} />
             </button>
