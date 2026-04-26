@@ -22,8 +22,9 @@ const SHIPPING_GROUPS = [
 ];
 
 export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack, onSuccess }) => {
-  const [formData, setFormData] = useState({ name: '', phone: '', wilaya: '', address: '', shippingType: 'home' as 'home' | 'desk' });
+  const [formData, setFormData] = useState({ name: '', phone: '', wilaya: '', address: '', note: '', shippingType: 'home' as 'home' | 'desk' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const allWilayas = useMemo(() => SHIPPING_GROUPS.flatMap(g => g.wilayas), []);
 
@@ -38,19 +39,27 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
     if (!formData.name || !formData.phone || !formData.wilaya) return;
     
     setIsSubmitting(true);
-    const success = await sendOrderToTelegram({
-      customer: formData,
-      items,
-      shipping: { type: formData.shippingType, cost: shippingCost },
-      total
-    });
+    setError(null);
 
-    if (success) {
-      onSuccess();
-    } else {
-      alert('عذراً، حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+    try {
+      const success = await sendOrderToTelegram({
+        customer: formData,
+        items,
+        shipping: { type: formData.shippingType, cost: shippingCost },
+        total
+      });
+
+      if (success) {
+        onSuccess();
+      } else {
+        setError('تعذر إرسال الطلب. يرجى التأكد من اتصالك بالإنترنت أو المحاولة لاحقاً.');
+      }
+    } catch (err) {
+      console.error('Submit Error:', err);
+      setError('حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   return (
@@ -68,7 +77,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">الاسم الكامل</label>
             <input 
               required
-              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none"
+              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-emerald-600 outline-none"
               placeholder="مثال: محمد أحمد"
               value={formData.name}
               onChange={e => setFormData({...formData, name: e.target.value})}
@@ -80,7 +89,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
             <input 
               required
               type="tel"
-              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none"
+              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-emerald-600 outline-none"
               placeholder="05 / 06 / 07 ..."
               value={formData.phone}
               onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -91,7 +100,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">الولاية</label>
             <select 
               required
-              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none appearance-none"
+              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-emerald-600 outline-none appearance-none"
               value={formData.wilaya}
               onChange={e => setFormData({...formData, wilaya: e.target.value})}
             >
@@ -106,7 +115,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
               <button 
                 type="button"
                 onClick={() => setFormData({...formData, shippingType: 'home'})}
-                className={`p-4 rounded-2xl border-2 transition-all text-right ${formData.shippingType === 'home' ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 bg-white'}`}
+                className={`p-4 rounded-2xl border-2 transition-all text-right ${formData.shippingType === 'home' ? 'border-emerald-600 bg-emerald-50/50' : 'border-slate-100 bg-white'}`}
               >
                 <div className="font-black text-xs text-slate-900">باب المنزل</div>
                 <div className="text-[10px] text-slate-500 mt-1">توصيل يد بيد</div>
@@ -114,7 +123,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
               <button 
                 type="button"
                 onClick={() => setFormData({...formData, shippingType: 'desk'})}
-                className={`p-4 rounded-2xl border-2 transition-all text-right ${formData.shippingType === 'desk' ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 bg-white'}`}
+                className={`p-4 rounded-2xl border-2 transition-all text-right ${formData.shippingType === 'desk' ? 'border-emerald-600 bg-emerald-50/50' : 'border-slate-100 bg-white'}`}
               >
                 <div className="font-black text-xs text-slate-900">مكتب ياليدين</div>
                 <div className="text-[10px] text-slate-500 mt-1">استلام من المكتب</div>
@@ -125,36 +134,52 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ items, total, onBack
           <div>
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">العنوان بالتفصيل</label>
             <textarea 
-              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none"
-              rows={3}
+              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-emerald-600 outline-none"
+              rows={2}
               placeholder="اسم الشارع، رقم الباب..."
               value={formData.address}
               onChange={e => setFormData({...formData, address: e.target.value})}
             />
           </div>
+
+          <div>
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">استفسار أو ملاحظة (اختياري)</label>
+            <textarea 
+              className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-emerald-600 outline-none"
+              rows={3}
+              placeholder="هل لديك استفسار عن الأسعار أو ملاحظة إضافية؟"
+              value={formData.note}
+              onChange={e => setFormData({...formData, note: e.target.value})}
+            />
+          </div>
         </div>
 
-        <div className="bg-slate-950 rounded-3xl p-6 text-white space-y-4">
-          <div className="flex justify-between text-xs font-bold text-slate-400">
-            <span>مجموع المنتجات</span>
-            <span>{total.toLocaleString()} دج</span>
+        {error && (
+          <div className="bg-red-50 text-red-600 p-5 rounded-3xl text-sm font-bold animate-in fade-in slide-in-from-top-2 text-center border-2 border-red-100 mb-4">
+            {error}
           </div>
-          <div className="flex justify-between text-xs font-bold text-slate-400">
-            <span>تكلفة الشحن ({formData.wilaya || 'لم تختر ولاية'})</span>
-            <span className="text-indigo-400">{shippingCost} دج</span>
+        )}
+
+        <div className="bg-slate-950 rounded-3xl p-6 text-white space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="font-black text-xs uppercase tracking-widest text-slate-400">عدد الأصناف</span>
+            <span className="text-xl font-black">{items.length}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-black text-xs uppercase tracking-widest text-slate-400">إجمالي قطع الجملة</span>
+            <span className="text-xl font-black">{items.reduce((s, i) => s + i.quantity, 0)}</span>
           </div>
           <div className="h-px bg-slate-800 my-2"></div>
-          <div className="flex justify-between items-end">
-            <span className="font-black text-sm uppercase tracking-widest">الإجمالي المطلوب</span>
-            <span className="text-2xl font-black">{(total + shippingCost).toLocaleString()} دج</span>
-          </div>
+          <p className="text-[10px] text-emerald-400 font-bold text-center leading-relaxed">
+            سيتم التواصل معكم لتأكيد أسعار الجملة النهائية وتكاليف الشحن مسبقاً.
+          </p>
         </div>
 
         <button 
           disabled={isSubmitting || !formData.wilaya}
-          className="w-full bg-indigo-600 text-white py-6 rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+          className="w-full bg-emerald-600 text-white py-6 rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:bg-emerald-700 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
         >
-          {isSubmitting ? 'جاري إرسال الطلب...' : 'تأكيد الطلب عبر التلجرام'}
+          {isSubmitting ? 'جاري إرسال الطلب...' : 'إرسال طلب الجملة'}
           <AppIcon name="CheckCircle2" size={18} />
         </button>
       </form>

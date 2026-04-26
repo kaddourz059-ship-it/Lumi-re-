@@ -14,7 +14,7 @@ export const BrandMarquee: React.FC = () => {
       <div className="flex overflow-hidden group">
         <div className="flex animate-marquee whitespace-nowrap py-4 items-center">
           {[...BRANDS, ...BRANDS].map((brand, i) => (
-            <span key={i} className="mx-12 text-2xl md:text-3xl font-black text-slate-200 hover:text-indigo-600 transition-colors cursor-default select-none">
+            <span key={i} className="mx-12 text-2xl md:text-3xl font-black text-slate-200 hover:text-emerald-600 transition-colors cursor-default select-none">
               {brand}
             </span>
           ))}

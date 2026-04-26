@@ -1,7 +1,8 @@
 {
-  "name": "Lumière Derme - Professional Medical Store",
-  "description": "أرقى متجر طبي للعناية بالبشرة والشعر في الجزائر، حلول مبتكرة تحت إشراف خبراء.",
+  "name": "CABA DZ - Wholesale Store",
+  "description": "المتجر الرائد للجملة في الجزائر - توصيل سريع وأسعار تنافسية.",
   "requestFramePermissions": [
     "camera"
-  ]
+  ],
+  "majorCapabilities": []
 }

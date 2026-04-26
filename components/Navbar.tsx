@@ -27,13 +27,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart, cartCount, onSearch,
         <div className="hidden lg:flex items-center gap-12">
           <button 
             onClick={() => onNavigate('home')} 
-            className={`text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:text-indigo-600 ${currentView === 'store' ? 'text-indigo-600' : 'text-slate-900'}`}
+            className={`text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:text-emerald-600 ${currentView === 'store' ? 'text-emerald-600' : 'text-slate-900'}`}
           >
             المتجر
           </button>
           <button 
             onClick={() => onNavigate('expertise')} 
-            className={`text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:text-indigo-600 ${currentView === 'expertise' ? 'text-indigo-600' : 'text-slate-900'}`}
+            className={`text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:text-emerald-600 ${currentView === 'expertise' ? 'text-emerald-600' : 'text-slate-900'}`}
           >
             نبذة عنا
           </button>
@@ -41,16 +41,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart, cartCount, onSearch,
 
         {/* Logo - Center */}
         <div 
-          className="cursor-pointer absolute left-1/2 -translate-x-1/2" 
+          className="cursor-pointer absolute left-1/2 -translate-x-1/2 flex items-center gap-3" 
           onClick={() => onNavigate('home')}
         >
-          <span className="text-3xl font-black tracking-[-0.05em] text-slate-950 uppercase">Lumière</span>
+          <img src="https://i.postimg.cc/8zFZZvYd/photo-5996828450909523476-y.jpg" alt="CABA DZ" className="h-12 w-12 object-contain rounded-full border border-slate-100" />
+          <span className="text-xl font-black tracking-tighter text-slate-950 uppercase hidden sm:block">CABA DZ</span>
         </div>
 
         {/* Actions - Right */}
         <div className="flex items-center gap-8">
           <div className="hidden md:flex items-center gap-3 group">
-            <AppIcon name="Search" size={14} className="text-slate-400 group-focus-within:text-indigo-600" />
+            <AppIcon name="Search" size={14} className="text-slate-400 group-focus-within:text-emerald-600" />
             <input 
               type="text"
               onChange={(e) => onSearch(e.target.value)}
@@ -61,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCart, cartCount, onSearch,
           
           <button 
             onClick={onOpenCart}
-            className="group relative flex items-center gap-3 bg-slate-950 text-white px-5 py-2.5 rounded-full hover:bg-indigo-600 transition-all shadow-xl shadow-slate-950/10"
+            className="group relative flex items-center gap-3 bg-slate-950 text-white px-5 py-2.5 rounded-full hover:bg-emerald-600 transition-all shadow-xl shadow-slate-950/10"
           >
             <div className="relative">
               <AppIcon name="ShoppingBag" size={18} />

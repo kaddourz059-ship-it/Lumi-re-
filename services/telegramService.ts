@@ -3,29 +3,39 @@ const TELEGRAM_TOKEN = '8168183546:AAFDELTWxc8hQYHtVI6rqNfQUeN7sne4Nec';
 const CHAT_ID = '6367981609';
 
 export const sendOrderToTelegram = async (orderData: any) => {
-  const { customer, items, shipping, total } = orderData;
+  const { customer, items, shipping } = orderData;
   
+  const escapeHTML = (text: string) => {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[m] || m));
+  };
+
   const itemsList = items.map((item: any) => 
-    `• ${item.name} (${item.quantity}x) = ${item.price * item.quantity} دج`
+    `• <b>${escapeHTML(item.name)}</b> (${item.quantity} قطعة)`
   ).join('\n');
 
   const message = `
-🛍️ **طلب جديد من Lumière Derme**
+📦 <b>طلب جملة جديد من CABA DZ</b>
 ──────────────────
-👤 **الزبون:** ${customer.name}
-📞 **الهاتف:** ${customer.phone}
-📍 **الولاية:** ${customer.wilaya}
-🏠 **العنوان:** ${customer.address}
+👤 <b>الزبون:</b> ${escapeHTML(customer.name)}
+📞 <b>الهاتف:</b> ${escapeHTML(customer.phone)}
+📍 <b>الولاية:</b> ${escapeHTML(customer.wilaya)}
+🏠 <b>العنوان:</b> ${escapeHTML(customer.address)}
+${customer.note ? `📝 <b>ملاحظة:</b> ${escapeHTML(customer.note)}` : ''}
 
-📦 **المنتجات:**
+🛒 <b>الطلبية:</b>
 ${itemsList}
 
-🚚 **الشحن:** ${shipping.type === 'desk' ? 'مكتب ياليدين' : 'باب المنزل'}
-💰 **تكلفة الشحن:** ${shipping.cost} دج
-
-💵 **الإجمالي الكلي:** ${total + shipping.cost} دج
+🚚 <b>نوع التوصيل:</b> ${shipping.type === 'desk' ? 'مكتب ياليدين' : 'باب المنزل'}
 ──────────────────
-✅ يرجى الاتصال بالزبون لتأكيد الطلب.
+⚠️ <i>ملاحظة: الأسعار ستحدد عند الاتصال بالزبون</i>
+✅ يرجى الاتصال بالزبون لتأكيد السعر النهائي وإتمام الطلب.
   `;
 
   try {
@@ -35,12 +45,18 @@ ${itemsList}
       body: JSON.stringify({
         chat_id: CHAT_ID,
         text: message,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
       })
     });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Telegram API Error:', errorData);
+    }
+    
     return response.ok;
   } catch (error) {
-    console.error('Telegram Error:', error);
+    console.error('Telegram Fetch Error:', error);
     return false;
   }
 };

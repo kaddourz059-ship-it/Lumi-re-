@@ -18,9 +18,9 @@ export const CATEGORIES: Category[] = [
     title: 'Advanced Anti-Aging',
     subtitle: 'استعيدي حيوية بشرتك وثقتك',
     description: 'تخطّي مفهوم مكافحة الشيخوخة التقليدي؛ نحن نقدم لكِ أحدث ابتكارات الطب التجميلي لاستعادة إشراقك الطبيعي.',
-    color: 'text-indigo-600',
-    bgLight: 'bg-indigo-50',
-    bgDark: 'bg-indigo-600',
+    color: 'text-emerald-600',
+    bgLight: 'bg-emerald-50',
+    bgDark: 'bg-emerald-600',
     icon: 'Sparkles',
     heroImage: 'https://i.postimg.cc/D0jPQMdT/photo-2026-01-30-00-01-44.jpg'
   },
@@ -67,10 +67,143 @@ export const CATEGORIES: Category[] = [
     bgDark: 'bg-blue-600',
     icon: 'Users',
     heroImage: 'https://i.postimg.cc/g2xXvyS2/cas-generated-1770302697280.png'
+  },
+  {
+    id: 'food',
+    title: 'Gourmet Selection',
+    subtitle: 'أجود أنواع الشوكولاتة والمواد الغذائية',
+    description: 'تشكيلة مختارة من أرقى العلامات التجارية العالمية بأسعار الجملة، نوفر لك الجودة والأصالة في كل قطعة.',
+    color: 'text-emerald-600',
+    bgLight: 'bg-emerald-50',
+    bgDark: 'bg-emerald-700',
+    icon: 'Apple',
+    heroImage: 'https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&q=80&w=2000'
+  },
+  {
+    id: 'perfume',
+    title: 'Luxury Fragrances',
+    subtitle: 'عطور عالمية فاخرة',
+    description: 'تشكيلة من أرقى الروائح والعطور العالمية التي تمنحك حضوراً مميزاً وثباتاً يدوم طويلاً.',
+    color: 'text-amber-600',
+    bgLight: 'bg-amber-50',
+    bgDark: 'bg-amber-600',
+    icon: 'Zap',
+    heroImage: 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=2000'
+  },
+  {
+    id: 'masks',
+    title: 'Expert Face Masks',
+    subtitle: 'أقنعة العناية المركزة',
+    description: 'أقنعة طبية وطبيعية مصممة بعناية لترميم وتغذية البشرة والشعر بعمق.',
+    color: 'text-sky-600',
+    bgLight: 'bg-sky-50',
+    bgDark: 'bg-sky-600',
+    icon: 'Sparkles',
+    heroImage: 'https://i.postimg.cc/bwTW1yfb/photo-2026-04-26-16-53-35.jpg'
   }
 ];
 
 export const MOCK_PRODUCTS: Product[] = [
+  // --- Gourmet Selection (Chocolates) ---
+  {
+    id: 'ch1',
+    name: 'FUSSION Chocolate',
+    description: 'شوكولاتة فيوجن الرائعة بمذاقها الغني والمميز.',
+    price: 0,
+    image: 'https://i.postimg.cc/wMw1P0MY/photo-5992536747788668041-y.jpg',
+    rating: 5.0,
+    category: 'food'
+  },
+  {
+    id: 'ch2',
+    name: 'NESTLE Chocolate',
+    description: 'شوكولاتة نستله الكلاسيكية المحبوبة عالمياً.',
+    price: 0,
+    image: 'https://i.postimg.cc/1Xv8TJtk/photo-5992536747788668042-y.jpg',
+    rating: 4.9,
+    category: 'food'
+  },
+  {
+    id: 'ch3',
+    name: 'HACENDADO Chocolate',
+    description: 'شوكولاتة هاسيندادو الإسبانية بجودة عالية وطعم لا يقاوم.',
+    price: 0,
+    image: 'https://i.postimg.cc/0jVz3cQL/photo-5992536747788668050-y.jpg',
+    rating: 4.8,
+    category: 'food'
+  },
+  {
+    id: 'ch4',
+    name: 'MILKA Chocolate',
+    description: 'ميلكا - نعومة حليب جبال الألب في كل قطعة.',
+    price: 0,
+    image: 'https://i.postimg.cc/L5xJ7NXw/photo-5992536747788668051-y.jpg',
+    rating: 5.0,
+    category: 'food'
+  },
+  {
+    id: 'ch5',
+    name: 'HACENDADO CACAO',
+    description: 'كاكاو هاسيندادو المركز لعشاق الطعم القوي.',
+    price: 0,
+    image: 'https://i.postimg.cc/90LDSJMS/photo-5992536747788668052-y.jpg',
+    rating: 4.7,
+    category: 'food'
+  },
+  {
+    id: 'ch6',
+    name: 'NEGRO Chocolate',
+    description: 'شوكولاتة نيجرو الداكنة والمميزة.',
+    price: 0,
+    image: 'https://i.postimg.cc/yxLD5vdr/photo-5992536747788668053-y.jpg',
+    rating: 4.9,
+    category: 'food'
+  },
+  {
+    id: 'ch7',
+    name: 'ROYAL MINTS',
+    description: 'رويال مينتس - مزيج الشوكولاتة والنعناع الفاخر.',
+    price: 0,
+    image: 'https://i.postimg.cc/sxTM8wXw/photo-5992536747788668055-y.jpg',
+    rating: 4.8,
+    category: 'food'
+  },
+  {
+    id: 'ch8',
+    name: 'NESQUIK Chocolate',
+    description: 'نسكويك - الطعم المفضل للصغار والكبار.',
+    price: 0,
+    image: 'https://i.postimg.cc/FzTYqDRG/photo-5992536747788668059-y.jpg',
+    rating: 4.9,
+    category: 'food'
+  },
+  {
+    id: 'ch9',
+    name: 'FORMATO AHORRO',
+    description: 'شوكولاتة بحجم توفيري مميز.',
+    price: 0,
+    image: 'https://i.postimg.cc/C5cRtm1s/photo-5992536747788668063-y.jpg',
+    rating: 4.6,
+    category: 'food'
+  },
+  {
+    id: 'ch10',
+    name: 'MILKA MAX',
+    description: 'ميلكا ماكس - حجم أكبر ومتعة أكثر.',
+    price: 0,
+    image: 'https://i.postimg.cc/cCxKXVsX/photo-5992536747788668092-y.jpg',
+    rating: 5.0,
+    category: 'food'
+  },
+  {
+    id: 'ch11',
+    name: 'NUTELLA',
+    description: 'نوتيلا - كريمة البندق والشوكولاتة الشهيرة.',
+    price: 0,
+    image: 'https://i.postimg.cc/SRSXDwyr/photo-5992536747788668093-y.jpg',
+    rating: 5.0,
+    category: 'food'
+  },
   // --- Solar Defense ---
   { 
     id: 's1', 
@@ -243,5 +376,194 @@ export const MOCK_PRODUCTS: Product[] = [
     image: 'https://i.postimg.cc/nrnp0Zng/3337872411991-Effaclar-Purifying-Cleansing-Gel-400ml-06-La-Roche-Posay.jpg', 
     rating: 4.9, 
     category: 'all-skin' 
+  },
+  {
+    id: 'pc1',
+    name: 'DOVE Deodorant',
+    description: 'مزيل عرق دوف لنعومة وحماية تدوم طويلاً.',
+    price: 0,
+    image: 'https://i.postimg.cc/XqjZQTVK/photo-5992536747788668097-x.jpg',
+    rating: 4.8,
+    category: 'body'
+  },
+  {
+    id: 'pc2',
+    name: 'CREM DEODORANT',
+    description: 'كريم مزيل عرق بتركيبة فعالة ولطيفة على البشرة.',
+    price: 0,
+    image: 'https://i.postimg.cc/8cpFtq1r/photo-5992536747788668100-x.jpg',
+    rating: 4.7,
+    category: 'body'
+  },
+  {
+    id: 'pc3',
+    name: 'NIVEA Body Milk',
+    description: 'لوشن نيفيا لترطيب الجسم العميق وتغذية البشرة.',
+    price: 0,
+    image: 'https://i.postimg.cc/zvzL09Jv/photo-5992536747788668101-x.jpg',
+    rating: 4.9,
+    category: 'body'
+  },
+  {
+    id: 'pc4',
+    name: 'Aloe Vera Gel',
+    description: 'جل الصبار الطبيعي لترطيب وتهدئة البشرة المتعبة.',
+    price: 0,
+    image: 'https://i.postimg.cc/mkLc80bD/photo-5992536747788668103-x.jpg',
+    rating: 4.8,
+    category: 'all-skin'
+  },
+  {
+    id: 'pc5',
+    name: 'Locion REPARA',
+    description: 'لوشن إصلاح البشرة والعناية المركزة.',
+    price: 0,
+    image: 'https://i.postimg.cc/mkLc80b2/photo-5992536747788668104-x.jpg',
+    rating: 4.7,
+    category: 'body'
+  },
+  {
+    id: 'pc6',
+    name: 'Luxury SHAMPOO',
+    description: 'شامبو بتركيبة غنية لتنظيف وتغذية الشعر.',
+    price: 0,
+    image: 'https://i.postimg.cc/vTY13pQY/photo-5992536747788668107-x.jpg',
+    rating: 4.8,
+    category: 'hair'
+  },
+  {
+    id: 'pc7',
+    name: 'LOREAL ELVIVE',
+    description: 'لوريال إلفيف - العناية المتكاملة لشعر صحي ولامع.',
+    price: 0,
+    image: 'https://i.postimg.cc/nrFs06HH/photo-5992536747788668111-x.jpg',
+    rating: 4.9,
+    category: 'hair'
+  },
+  {
+    id: 'pf1',
+    name: 'ECLANT Perfume',
+    description: 'عطر إيكلان الفاخر برائحة ساحرة وجذابة.',
+    price: 0,
+    image: 'https://i.postimg.cc/4NPJd1MX/photo-2026-04-26-16-24-39.jpg',
+    rating: 5.0,
+    category: 'perfume'
+  },
+  {
+    id: 'pf2',
+    name: 'SUPREME Fragrance',
+    description: 'سوبريم - لمسة من الرقي والفخامة في كل رشة.',
+    price: 0,
+    image: 'https://i.postimg.cc/J4x1nQgm/photo-2026-04-26-16-24-49.jpg',
+    rating: 4.9,
+    category: 'perfume'
+  },
+  {
+    id: 'pf3',
+    name: 'VAINILLA BAUNILHA',
+    description: 'عطر الفانيليا الدافئ والمنعش.',
+    price: 0,
+    image: 'https://i.postimg.cc/VLgY6FTm/photo-2026-04-26-16-24-54.jpg',
+    rating: 4.8,
+    category: 'perfume'
+  },
+  {
+    id: 'pf4',
+    name: 'BRIGHT Crystal',
+    description: 'برايت - عطر مشرق يمنحك الطاقة والحيوية.',
+    price: 0,
+    image: 'https://i.postimg.cc/65c93hSN/photo-2026-04-26-16-25-00.jpg',
+    rating: 4.9,
+    category: 'perfume'
+  },
+  {
+    id: 'pf5',
+    name: 'AMOR Special Edition',
+    description: 'عطر آمور - تجسيد للأناقة والجاذبية.',
+    price: 0,
+    image: 'https://i.postimg.cc/PrytxMcj/photo-2026-04-26-16-25-05.jpg',
+    rating: 5.0,
+    category: 'perfume'
+  },
+  {
+    id: 'pf6',
+    name: 'ACCION Intense',
+    description: 'أكسيون - عطر قوي ومميز للرجال العصريين.',
+    price: 0,
+    image: 'https://i.postimg.cc/kXsn4yZ3/photo-2026-04-26-16-25-12.jpg',
+    rating: 4.8,
+    category: 'perfume'
+  },
+  {
+    id: 'pf7',
+    name: 'GLACIER Cool',
+    description: 'جلاسير - انتعاش الجليد في عطر فريد.',
+    price: 0,
+    image: 'https://i.postimg.cc/02n8QC4T/photo-2026-04-26-16-25-22.jpg',
+    rating: 4.7,
+    category: 'perfume'
+  },
+  {
+    id: 'pf8',
+    name: 'ENCHANTED Night',
+    description: 'إنشانتد - عطر ليلي غامض وجذاب.',
+    price: 0,
+    image: 'https://i.postimg.cc/NfBsBnNY/photo-2026-04-26-16-25-35.jpg',
+    rating: 4.9,
+    category: 'perfume'
+  },
+  {
+    id: 'pf9',
+    name: 'GESTO Classic',
+    description: 'جيستو - العطر الكلاسيكي الذي لا ينسى.',
+    price: 0,
+    image: 'https://i.postimg.cc/rFMVMHhT/photo-2026-04-26-16-25-48.jpg',
+    rating: 4.8,
+    category: 'perfume'
+  },
+  {
+    id: 'mk1',
+    name: 'MASK NATURAL',
+    description: 'ماسك طبيعي بخلاصات عشبية لتنقية وتصفية البشرة.',
+    price: 0,
+    image: 'https://i.postimg.cc/RVGxLZvC/photo-2026-04-26-16-41-03.jpg',
+    rating: 4.9,
+    category: 'masks'
+  },
+  {
+    id: 'mk2',
+    name: 'MASK LOREAL ELVIVE',
+    description: 'ماسك لوريال إلفيف للعناية الفائقة وإصلاح الشعر التالف.',
+    price: 0,
+    image: 'https://i.postimg.cc/ZKjzx5JT/photo-2026-04-26-16-41-09.jpg',
+    rating: 4.8,
+    category: 'masks'
+  },
+  {
+    id: 'mk3',
+    name: 'MASK ARGAN',
+    description: 'ماسك زيت الأرغان المغربي لترطيب ونعومة خيالية.',
+    price: 0,
+    image: 'https://i.postimg.cc/8PwgmzTD/photo-2026-04-26-16-41-15.jpg',
+    rating: 5.0,
+    category: 'masks'
+  },
+  {
+    id: 'mk4',
+    name: 'MASK CURL PERFECT',
+    description: 'ماسك مخصص للشعر الكيرلي لتحديد الخصلات ومنع التجعد.',
+    price: 0,
+    image: 'https://i.postimg.cc/QxSZJdjD/photo-2026-04-26-16-41-24.jpg',
+    rating: 4.7,
+    category: 'masks'
+  },
+  {
+    id: 'mk5',
+    name: 'MASK REPAIR & NUTRITION',
+    description: 'ماسك الترميم والتغذية العميقة للبشرة المجهدة.',
+    price: 0,
+    image: 'https://i.postimg.cc/KvQhD8m2/photo-2026-04-26-16-41-29.jpg',
+    rating: 4.9,
+    category: 'masks'
   }
 ];

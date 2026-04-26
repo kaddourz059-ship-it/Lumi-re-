@@ -19,7 +19,11 @@ import {
   Search,
   MessageCircle,
   CheckCircle2,
-  Droplets
+  Droplets,
+  Zap,
+  Apple,
+  Instagram,
+  Send
 } from 'lucide-react';
 
 export const IconMap: Record<string, any> = {
@@ -41,7 +45,11 @@ export const IconMap: Record<string, any> = {
   Search,
   MessageCircle,
   CheckCircle2,
-  Droplets
+  Droplets,
+  Zap,
+  Apple,
+  Instagram,
+  Send
 };
 
 export const AppIcon = ({ name, className, size = 24 }: { name: string, className?: string, size?: number }) => {

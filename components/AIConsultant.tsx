@@ -1,79 +1,64 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { AppIcon } from './Icons';
+import { chatWithAI } from '../services/geminiService';
 
 export const AIConsultant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>([
-    {role: 'model', text: 'مرحباً بك في Lumière Derme. أنا مستشارك الطبي الذكي. كيف يمكنني مساعدتك اليوم؟'}
+    {role: 'model', text: 'أهلاً بك في CABA DZ! معاك خبير التوريد، كيفاش نقدر نعاونك اليوم في اختيار أحسن السلع لتجارتك؟'}
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
   }, [messages, isTyping]);
 
   const handleSend = async () => {
     if (!input.trim() || isTyping) return;
-    
-    const userMsg = input;
+
+    const userMsg = input.trim();
     setInput('');
     setMessages(prev => [...prev, {role: 'user', text: userMsg}]);
     setIsTyping(true);
 
-    try {
-      // الالتزام الصارم بالوصول المباشر لـ process.env.API_KEY
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: userMsg,
-        config: {
-          systemInstruction: 'أنت خبير Dermatologist (طبيب جلدية) افتراضي لمتجر Lumière Derme الراقي في الجزائر. قدم نصائح علمية دقيقة، بأسلوب لبق وفاخر. لغتك هي العربية بلهجة مهذبة وراقية.'
-        }
-      });
-      
-      const responseText = response.text || "نعتذر، لم أتمكن من معالجة طلبك حالياً.";
-      setMessages(prev => [...prev, {role: 'model', text: responseText}]);
-      
-    } catch (error) {
-      console.error("Gemini Error:", error);
-      setMessages(prev => [...prev, {role: 'model', text: 'عذراً، المستشار الطبي يواجه مشكلة تقنية بسيطة. يرجى المحاولة بعد لحظات.'}]);
-    } finally {
-      setIsTyping(false);
-    }
+    const response = await chatWithAI([...messages, {role: 'user', text: userMsg}]);
+    setMessages(prev => [...prev, {role: 'model', text: response}]);
+    setIsTyping(false);
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[250]">
-      {isOpen ? (
-        <div className="bg-white w-[380px] h-[600px] rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-slate-100 animate-in slide-in-from-bottom-10 fade-in duration-500 text-right">
-          <div className="bg-slate-950 p-7 text-white flex justify-between items-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="bg-indigo-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-600/30">
-                <AppIcon name="Sparkles" size={18} />
+    <div className="fixed bottom-8 right-8 z-[500] flex flex-col items-end">
+      {isOpen && (
+        <div className="bg-white/95 backdrop-blur-xl w-[380px] h-[550px] mb-6 rounded-[2.5rem] shadow-2xl border border-slate-100 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500">
+          {/* Header */}
+          <div className="p-8 bg-slate-900 text-white flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <AppIcon name="Sparkles" size={24} className="text-white" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-black text-sm tracking-tight">AI Derme Expert</span>
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-indigo-400">Consultation Live</span>
+              <div>
+                <h3 className="font-black text-sm tracking-widest uppercase">AI Consultant</h3>
+                <p className="text-[10px] text-emerald-400 font-bold">Online • Expert</p>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="hover:rotate-90 transition-all duration-300 p-2 bg-white/10 rounded-full">
-              <AppIcon name="X" size={16} />
+            <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+              <AppIcon name="X" size={20} />
             </button>
           </div>
-          
-          <div ref={scrollRef} className="flex-grow p-8 overflow-y-auto hide-scrollbar space-y-8 bg-slate-50/30">
+
+          {/* Messages */}
+          <div ref={scrollRef} className="flex-grow overflow-y-auto p-8 space-y-6 scroll-smooth">
             {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.role === 'user' ? 'justify-start' : 'justify-end'}`}>
-                <div className={`max-w-[85%] p-5 rounded-[2rem] text-[13px] leading-relaxed font-medium shadow-sm transition-all duration-300 ${
+              <div key={i} className={`flex ${m.role === 'user' ? 'justify-start' : 'justify-end text-right'}`}>
+                <div className={`max-w-[85%] p-5 rounded-[1.8rem] text-sm leading-relaxed font-medium ${
                   m.role === 'user' 
-                    ? 'bg-slate-900 text-white rounded-tr-none' 
-                    : 'bg-white text-slate-800 rounded-tl-none border border-slate-100'
+                  ? 'bg-slate-100 text-slate-800 rounded-tl-none' 
+                  : 'bg-emerald-50 text-emerald-900 rounded-tr-none'
                 }`}>
                   {m.text}
                 </div>
@@ -81,41 +66,47 @@ export const AIConsultant: React.FC = () => {
             ))}
             {isTyping && (
               <div className="flex justify-end">
-                <div className="bg-indigo-50 text-indigo-600 p-4 rounded-[2rem] rounded-tl-none text-[10px] font-black animate-pulse">
-                  جاري التحليل الطبي...
+                <div className="bg-emerald-50 p-5 rounded-[1.8rem] rounded-tr-none flex gap-1">
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="p-6 bg-white border-t border-slate-50 flex gap-3">
-            <input 
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="اكتب استفسارك الطبي هنا..."
-              className="flex-grow bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-bold focus:ring-2 focus:ring-indigo-600 outline-none"
-            />
-            <button 
-              onClick={handleSend}
-              disabled={isTyping}
-              className="bg-slate-950 text-white p-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-xl active:scale-95 disabled:opacity-50"
-            >
-              <AppIcon name="ArrowLeft" size={20} />
-            </button>
+          {/* Input */}
+          <div className="p-6 border-t border-slate-50 bg-slate-50/50">
+            <div className="relative group">
+              <input 
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="اسأل خبير التوريد..."
+                className="w-full bg-white border-2 border-transparent focus:border-emerald-500 rounded-3xl py-5 px-8 pr-16 text-right text-sm font-bold shadow-sm transition-all focus:shadow-xl focus:shadow-emerald-500/10"
+              />
+              <button 
+                onClick={handleSend}
+                disabled={isTyping || !input.trim()}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-slate-900 text-white rounded-2xl flex items-center justify-center hover:bg-emerald-600 transition-all disabled:opacity-30"
+              >
+                <AppIcon name="Send" size={18} />
+              </button>
+            </div>
+            <p className="text-center mt-4 text-[9px] text-slate-400 font-black uppercase tracking-widest">Powered by Gemini AI Expert</p>
           </div>
         </div>
-      ) : (
-        <button 
-          onClick={() => setIsOpen(true)}
-          className="group bg-slate-950 text-white pl-8 pr-6 py-5 rounded-full shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-5 border-4 border-white"
-        >
-          <span className="font-black text-xs uppercase tracking-[0.2em] hidden sm:block">استشارة فورية</span>
-          <div className="relative">
-            <AppIcon name="MessageCircle" size={22} className="relative z-10 text-indigo-400" />
-          </div>
-        </button>
       )}
+
+      {/* Toggle Button */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-20 h-20 bg-slate-950 text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:bg-emerald-600 hover:-translate-y-2 transition-all group relative"
+      >
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full border-4 border-white animate-pulse"></div>
+        <AppIcon name={isOpen ? "X" : "Sparkles"} size={32} className="group-hover:rotate-12 transition-transform" />
+      </button>
     </div>
   );
 };

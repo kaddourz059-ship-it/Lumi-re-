@@ -36,10 +36,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, color, onAddT
       </div>
 
       <div className="text-center space-y-2">
-        <span className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Scientific Skincare</span>
+        <span className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Wholesale Collection</span>
         <h3 className="text-xl font-black text-slate-900 leading-tight">{product.name}</h3>
         <div className="flex items-center justify-center gap-4 pt-2">
-           <span className="text-lg font-black text-slate-950">{product.price.toLocaleString()} <small className="text-[10px] font-normal uppercase">DZD</small></span>
+           <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-4 py-1 rounded-full">سعر الجملة عند الطلب</span>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ export interface Product {
   category: CategoryID;
 }
 
-export type CategoryID = 'sun' | 'all-skin' | 'grasse' | 'hair' | 'anti-aging' | 'body' | 'sensitive';
+export type CategoryID = 'sun' | 'all-skin' | 'grasse' | 'hair' | 'anti-aging' | 'body' | 'sensitive' | 'food' | 'perfume' | 'masks';
 
 export interface Category {
   id: CategoryID;
